@@ -1,0 +1,4 @@
+services:
+  worker:
+    # 本机体验环境直接运行 worker，避免挂载目录的文件监听错误中断任务。
+    command: ["python", "-m", "server.worker_main"]

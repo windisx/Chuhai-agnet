@@ -1,0 +1,14 @@
+# ChuHai-agent 独立本地开发部署；基础应用源码与 YUXi 相同。
+services:
+  api:
+    ports: !override
+      - "127.0.0.1:${YUXI_API_PORT:-25050}:5050"
+  web:
+    ports: !override
+      - "127.0.0.1:${YUXI_WEB_PORT:-25173}:5173"
+  graph:
+    environment:
+      # 与原 YUXi 同时运行时，为当前小型知识库控制 Neo4j 内存。
+      NEO4J_server_memory_heap_initial__size: 256m
+      NEO4J_server_memory_heap_max__size: 512m
+      NEO4J_server_memory_pagecache_size: 256m
