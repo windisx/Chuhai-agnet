@@ -882,7 +882,13 @@ defineExpose({
               :checked="editingProviderId ? originalProviderEnabled : providerForm.is_enabled"
               :loading="saving"
               :disabled="saving"
-              :aria-label="editingProviderId ? (originalProviderEnabled ? '停用供应商' : '启用供应商') : '创建时启用供应商'"
+              :aria-label="
+                editingProviderId
+                  ? originalProviderEnabled
+                    ? '停用供应商'
+                    : '启用供应商'
+                  : '创建时启用供应商'
+              "
               @change="toggleProviderEnabled"
             />
           </div>
@@ -967,17 +973,7 @@ defineExpose({
             />
           </label>
           <label class="form-label">
-            <span class="api-key-label">
-              API Key
-              <a
-                v-if="providerForm.provider_id === 'fluxionai'"
-                href="https://fluxionai.space/register?source=github&campaign=yuxi&promo=YUXI"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                注册送 $7 API 额度
-              </a>
-            </span>
+            <span class="api-key-label"> API Key </span>
             <a-input-password
               v-model:value="providerForm.api_key"
               autocomplete="new-password"
@@ -1044,7 +1040,11 @@ defineExpose({
 
         <div class="form-switch">
           <a-tooltip
-            :title="providerForm.provider_type === 'gemini' ? 'Gemini 供应商暂不支持请求携带用户 ID。' : '开启后，智能体对话产生的聊天模型请求会携带带 HMAC 签名的 x-yuxi-uid 请求头（值为当前用户 UID），外部网关验签后即可按用户统计用量并防止伪造。需要先在 API/worker 环境变量配置 YUXI_UID_SIGNATURE_SECRET，保存时会校验；仅影响该供应商且仅在开启时生效。'"
+            :title="
+              providerForm.provider_type === 'gemini'
+                ? 'Gemini 供应商暂不支持请求携带用户 ID。'
+                : '开启后，智能体对话产生的聊天模型请求会携带带 HMAC 签名的 x-yuxi-uid 请求头（值为当前用户 UID），外部网关验签后即可按用户统计用量并防止伪造。需要先在 API/worker 环境变量配置 YUXI_UID_SIGNATURE_SECRET，保存时会校验；仅影响该供应商且仅在开启时生效。'
+            "
           >
             <span>请求携带用户 ID</span>
           </a-tooltip>

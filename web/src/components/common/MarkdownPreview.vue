@@ -1126,4 +1126,33 @@ const showCopiedFeedback = (btn) => {
     }
   }
 }
+
+.yk-markdown-preview.message-md {
+  color: var(--gray-1000);
+  font-size: 15px;
+  line-height: 1.85;
+  p {
+    margin: 0 0 18px;
+  }
+  h1,
+  h2,
+  h3 {
+    margin: 26px 0 14px;
+    line-height: 1.5;
+    font-weight: 650;
+    color: var(--gray-1000);
+  }
+  h1 {
+    font-size: 23px;
+  }
+  h2 {
+    font-size: 20px;
+  }
+  h3 {
+    font-size: 17px;
+  }
+  li {
+    margin: 5px 0;
+  }
+}
 </style>

@@ -1337,13 +1337,22 @@ defineExpose({
   display: grid;
   width: 100%;
   margin: 0 auto;
-  border: 1px solid var(--gray-150);
-  border-radius: 1.4rem;
-  box-shadow: 0 2px 8px var(--shadow-1);
-  transition: all 0.3s ease;
+  border: 1px solid var(--gray-200);
+  border-radius: 20px;
+  box-shadow: 0 6px 24px var(--shadow-1);
+  transition:
+    border-color 0.18s ease,
+    box-shadow 0.18s ease;
   background: var(--gray-0);
   gap: 0px;
   position: relative;
+
+  &:focus-within {
+    border-color: var(--main-300);
+    box-shadow:
+      0 0 0 3px var(--main-50),
+      0 6px 24px var(--shadow-1);
+  }
 
   /* Default: Multi-line layout with top/bottom slots */
   padding: 0.8rem 0.75rem 0.6rem 0.75rem;

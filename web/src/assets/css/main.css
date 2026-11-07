@@ -26,7 +26,7 @@ body {
   line-height: 1.6;
   font-family:
     -apple-system, BlinkMacSystemFont, 'Noto Sans SC', 'Roboto', 'HarmonyOS Sans SC', 'Segoe UI',
-    'Helvetica Neue', Arial, sans-serif;
+    'PingFang SC', 'Microsoft YaHei', 'Helvetica Neue', Arial, sans-serif;
   font-size: 15px;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -243,4 +243,42 @@ body {
   height: 1px;
   margin: 4px 4px;
   background: var(--gray-100);
+}
+
+/* 展示层的统一反馈；不改变控件行为与状态。 */
+button,
+input,
+textarea,
+select {
+  font-family: inherit;
+}
+button:focus-visible,
+a:focus-visible,
+[role='button']:focus-visible {
+  outline: 2px solid var(--main-400);
+  outline-offset: 3px;
+}
+.ant-modal .ant-modal-content {
+  border: 1px solid var(--gray-150);
+  border-radius: 16px;
+  box-shadow: 0 20px 70px var(--shadow-3);
+}
+.ant-dropdown .ant-dropdown-menu {
+  padding: 6px;
+  border: 1px solid var(--gray-150);
+  border-radius: 12px;
+  box-shadow: 0 12px 36px var(--shadow-2);
+}
+.ant-btn-primary {
+  box-shadow: 0 2px 5px var(--shadow-1);
+}
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

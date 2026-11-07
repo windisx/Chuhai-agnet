@@ -38,15 +38,8 @@
     <template #footer>
       <div class="benchmark-modal-footer">
         <div class="benchmark-help-text">
-          需要了解评估基准格式？查看
-          <a
-            class="benchmark-help-link"
-            href="https://xerrors.github.io/Yuxi/intro/evaluation.html"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            使用说明
-          </a>
+          评估基准格式：
+          <span>JSONL文件每行包含一个评估样本</span>
         </div>
         <div class="footer-actions">
           <a-button :disabled="uploading" @click="handleCancel">取消</a-button>

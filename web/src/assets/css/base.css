@@ -1,28 +1,30 @@
 /* color palette from <https://github.com/vuejs/theme> */
 /* https://material-foundation.github.io/material-theme-builder/ */
 :root {
-  --main-1000: #01151f;
-  --main-900: #023944;
-  --main-800: #035065;
-  --main-700: #046a82;
-  --main-600: #24839a;
-  --main-500: #3996ae;
-  --main-400: #5faec2;
-  --main-300: #82c3d6;
-  --main-200: #a3d8e8;
-  --main-100: #c4eaf5;
-  --main-50: #e1f6fb;
-  --main-40: #eaf3f5;
-  --main-30: #f7fbfd;
-  --main-20: #f6f9fa;
-  --main-10: #fafcfd;
-  --main-5: #fcfefe;
+  --main-1000: #101e3b;
+  --main-900: #183263;
+  --main-800: #1e40af;
+  --main-700: #1d4ed8;
+  --main-600: #2563eb;
+  --main-500: #3b82f6;
+  --main-400: #60a5fa;
+  --main-300: #93c5fd;
+  --main-200: #bfdbfe;
+  --main-100: #dbeafe;
+  --main-50: #eff6ff;
+  --main-40: #f1f5fc;
+  --main-30: #f5f8ff;
+  --main-20: #f7f9fd;
+  --main-10: #fafbfe;
+  --main-5: #fbfcfe;
   --main-1: #fefefe;
   --main-0: #ffffff;
 
+  --brand-on-primary: #ffffff;
+
   /* 保留原有的 main 变量 */
-  --main-color: var(--main-700);
-  --main-bright: #0188a6;
+  --main-color: var(--main-600);
+  --main-bright: var(--main-500);
 
   /* 辅助色：暖金色系，基准 --second-500 #c9983c，刻度与 --main-* 对齐 */
   --second-1000: #2e2108;
@@ -46,22 +48,22 @@
 
   --second-color: var(--second-600);
 
-  --gray-10000: #000000; /* 保持纯黑 */
-  --gray-2000: #0c0d0d; /* 更精致的暗灰，用于极深背景 */
-  --gray-1000: #151616; /* 深灰黑，适用于主文本 */
-  --gray-900: #1e1f1f;
-  --gray-800: #323333; /* 标准深灰，适合背景 */
-  --gray-700: #4c4d4d;
-  --gray-600: #697070; /* 调和中灰，适合次要文本 */
-  --gray-500: #979999; /* 更柔和的中灰色 */
-  --gray-400: #bdbfbf;
-  --gray-300: #d7d9d9; /* 修正了原300/200重复 */
-  --gray-200: #e4e6e6; /* 稍微加深一点，便于分层 */
-  --gray-150: #eef0f0;
-  --gray-100: #eff2f2;
-  --gray-50: #f5f7f7;
-  --gray-25: #f8fafa;
-  --gray-10: #fbfcfc;
+  --gray-10000: #111827; /* 保持纯黑 */
+  --gray-2000: #17202f; /* 更精致的暗灰，用于极深背景 */
+  --gray-1000: #1d2532; /* 深灰黑，适用于主文本 */
+  --gray-900: #273142;
+  --gray-800: #364152; /* 标准深灰，适合背景 */
+  --gray-700: #4d596a;
+  --gray-600: #687385; /* 调和中灰，适合次要文本 */
+  --gray-500: #7e899a; /* 更柔和的中灰色 */
+  --gray-400: #a5afbe;
+  --gray-300: #cfd6e0; /* 修正了原300/200重复 */
+  --gray-200: #dce2eb; /* 稍微加深一点，便于分层 */
+  --gray-150: #e7ebf1;
+  --gray-100: #edf0f5;
+  --gray-50: #f3f5f8;
+  --gray-25: #f7f8fb;
+  --gray-10: #fafbfc;
   --gray-0: #ffffff;
 
   /* Standard Color System - 标准5档色阶系统 */
@@ -125,7 +127,7 @@
   --chart-palette-9: #e885ba;
   --chart-palette-10: #8c8c8c;
 
-  --bg-sider: var(--main-5);
+  --bg-sider: var(--gray-25);
 
   --light-98: rgba(255, 255, 255, 0.98);
   --light-95: rgba(255, 255, 255, 0.95);

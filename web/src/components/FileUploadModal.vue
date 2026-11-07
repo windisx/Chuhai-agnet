@@ -2,9 +2,7 @@
   <a-modal v-model:open="visible" title="添加文件" width="800px" @cancel="handleCancel">
     <template #footer>
       <div class="footer-container">
-        <a-button type="link" class="help-link-btn" @click="openDocLink">
-          <CircleHelp :size="14" /> 文档处理说明
-        </a-button>
+        <span class="help-link-btn">选择文件及解析方式后添加到知识库</span>
         <div class="footer-buttons">
           <a-button key="back" @click="handleCancel">取消</a-button>
           <a-button
@@ -294,7 +292,6 @@ import {
   FolderUp,
   FolderOpen,
   RotateCw,
-  CircleHelp,
   Info,
   Download,
   Trash2,
@@ -1132,14 +1129,6 @@ const handleDrop = () => {}
 const getAuthHeaders = () => {
   const userStore = useUserStore()
   return userStore.getAuthHeaders()
-}
-
-const openDocLink = () => {
-  window.open(
-    'https://xerrors.github.io/Yuxi/advanced/document-processing.html',
-    '_blank',
-    'noopener'
-  )
 }
 
 const chunkData = async () => {

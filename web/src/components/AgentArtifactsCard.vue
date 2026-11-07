@@ -218,7 +218,7 @@ const confirmSave = async () => {
   color: inherit;
   text-align: left;
   cursor: pointer;
-  padding: 10px 8px 10px 12px;
+  padding: 14px 10px 14px 16px;
 }
 
 .item-icon {
@@ -233,7 +233,7 @@ const confirmSave = async () => {
 }
 
 .item-name {
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 600;
   color: var(--gray-900);
   overflow: hidden;
@@ -243,7 +243,7 @@ const confirmSave = async () => {
 }
 
 .item-desc {
-  margin-top: 2px;
+  margin-top: 5px;
   font-size: 12px;
   color: var(--gray-500);
   line-height: 1.2;

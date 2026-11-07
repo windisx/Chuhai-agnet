@@ -18,12 +18,8 @@
     <nav class="login-navbar">
       <div class="navbar-content">
         <div class="brand-container" @click="goHome" style="cursor: pointer">
-          <img v-if="brandLogo" :src="brandLogo" alt="logo" class="brand-logo" />
-          <h1 class="brand-text">
-            <span v-if="brandOrgName" class="brand-org">{{ brandOrgName }}</span>
-            <span v-if="brandOrgName && brandName !== brandOrgName" class="brand-separator"></span>
-            <span class="brand-main">{{ brandName }}</span>
-          </h1>
+          <img :src="BRAND.logo" :alt="BRAND.name" class="brand-logo" />
+          <h1 class="brand-text">{{ BRAND.name }}</h1>
         </div>
       </div>
     </nav>
@@ -33,7 +29,14 @@
       <div class="login-card">
         <!-- 左侧图片 -->
         <div class="card-side is-image">
-          <img :src="loginBgImage" alt="登录背景" class="login-bg-image" />
+          <div class="login-brand-art" aria-hidden="true">
+            <h2>资料有据。<br />出海有序。</h2>
+            <p>让每次资料提交，都有清晰依据。</p>
+            <div class="document-orbit">
+              <div class="document-sheet sheet-back"></div>
+              <div class="document-sheet sheet-front"></div>
+            </div>
+          </div>
         </div>
 
         <!-- 右侧表单 -->
@@ -42,7 +45,10 @@
             <header class="form-header">
               <!-- 如果是在初始化，显示特定标题 -->
               <h2 v-if="isFirstRun" class="init-title">系统初始化，请创建超级管理员</h2>
-              <p v-else class="welcome-text">欢迎登录</p>
+              <template v-else
+                ><h2 class="welcome-text">欢迎登录</h2>
+                <p class="welcome-description">登录链证出海，继续资料预审</p></template
+              >
             </header>
 
             <div class="login-content" :class="{ 'is-initializing': isFirstRun }">
@@ -266,14 +272,7 @@
 
     <!-- 页面底部：版权信息等 -->
     <footer class="page-footer">
-      <div class="footer-links">
-        <a href="https://github.com/xerrors" target="_blank">联系我们</a>
-        <span class="divider">|</span>
-        <a href="https://github.com/xerrors/Yuxi" target="_blank">使用帮助</a>
-      </div>
-      <div class="copyright">
-        &copy; {{ new Date().getFullYear() }} {{ brandName }}. All Rights Reserved.
-      </div>
+      <div class="copyright">{{ BRAND.footer }}</div>
     </footer>
   </div>
 </template>
@@ -295,6 +294,7 @@ import {
 } from '@lucide/vue'
 import { tryAutoStartOIDC, sanitizeRedirect } from '@/utils/oidcAutoStart'
 import { MIN_PASSWORD_LENGTH } from '@/utils/passwordValidation'
+import { BRAND } from '@/config/brand'
 
 const router = useRouter()
 const route = useRoute()
@@ -302,26 +302,6 @@ const userStore = useUserStore()
 const infoStore = useInfoStore()
 const agentStore = useAgentStore()
 
-// 品牌展示数据
-const loginBgImage = computed(() => {
-  return infoStore.organization?.login_bg || '/login-bg.jpg'
-})
-const brandLogo = computed(() => {
-  return infoStore.organization?.logo || ''
-})
-const brandOrgName = computed(() => {
-  return infoStore.organization?.name?.trim() || ''
-})
-const brandName = computed(() => {
-  const orgName = brandOrgName.value
-  const brandNameRaw = infoStore.branding?.name?.trim() || 'Yuxi'
-
-  if (orgName && brandNameRaw && orgName !== brandNameRaw) {
-    return brandNameRaw
-  }
-
-  return orgName || brandNameRaw
-})
 const userAgreementUrl = computed(() => {
   return infoStore.footer?.user_agreement_url?.trim() || ''
 })
@@ -673,8 +653,7 @@ onUnmounted(() => {
   display: flex;
   flex-direction: column;
   background-color: var(--gray-10);
-  background-image: radial-gradient(var(--gray-200) 1px, transparent 1px);
-  background-size: 24px 24px;
+  background-image: radial-gradient(ellipse at 30% 50%, var(--main-30), transparent 70%);
 
   &.has-alert {
     padding-top: 60px;
@@ -765,12 +744,13 @@ onUnmounted(() => {
 }
 
 .login-card {
-  width: 900px;
+  width: 1040px;
   max-width: 95vw;
-  height: 560px;
+  min-height: 570px;
   background: var(--gray-0);
-  border-radius: 16px;
-  box-shadow: 0 0px 40px var(--shadow-1);
+  border-radius: 22px;
+  border: 1px solid var(--gray-150);
+  box-shadow: 0 16px 60px var(--shadow-1);
   display: flex;
   overflow: hidden;
 }
@@ -781,7 +761,7 @@ onUnmounted(() => {
 
 /* Image Side */
 .card-side.is-image {
-  flex: 1.4;
+  flex: 1;
   background-color: var(--main-10);
   overflow: hidden;
 
@@ -804,7 +784,7 @@ onUnmounted(() => {
 
 .form-wrapper {
   width: 100%;
-  max-width: 320px;
+  max-width: 360px;
   display: flex;
   flex-direction: column;
   gap: 32px;
@@ -813,12 +793,12 @@ onUnmounted(() => {
 .form-header {
   text-align: left;
   .welcome-text {
-    font-size: 14px;
-    font-weight: 600;
-    color: var(--gray-500);
+    font-size: 30px;
+    font-weight: 650;
+    color: var(--gray-1000);
     margin-bottom: 4px;
     text-transform: uppercase;
-    letter-spacing: 1px;
+    letter-spacing: normal;
   }
   .init-title {
     font-size: 18px;
@@ -835,7 +815,7 @@ onUnmounted(() => {
     border-radius: 8px;
   }
   :deep(.ant-btn) {
-    height: 44px;
+    height: 46px;
     font-size: 16px;
     border-radius: 8px;
   }
@@ -905,7 +885,7 @@ onUnmounted(() => {
   .login-skeleton {
     :deep(.ant-skeleton-button) {
       width: 100% !important;
-      height: 44px;
+      height: 46px;
       border-radius: 8px;
     }
   }
@@ -1062,5 +1042,89 @@ onUnmounted(() => {
   .card-side.is-form {
     padding: 40px 20px;
   }
+}
+
+.welcome-description {
+  margin: 10px 0 0;
+  font-size: 14px;
+  color: var(--gray-600);
+  line-height: 1.7;
+}
+.login-brand-art {
+  padding: 54px 46px;
+  width: 100%;
+  min-height: 570px;
+  background: linear-gradient(145deg, var(--main-20), var(--gray-10));
+}
+.login-brand-art h2 {
+  font-size: 42px;
+  font-weight: 650;
+  line-height: 1.45;
+  color: var(--gray-1000);
+  margin: 0 0 18px;
+}
+.login-brand-art p {
+  color: var(--gray-600);
+  font-size: 15px;
+  line-height: 1.8;
+}
+.document-orbit {
+  height: 240px;
+  margin-top: 32px;
+}
+.document-orbit::after {
+  content: '';
+  position: absolute;
+  left: -50px;
+  right: -50px;
+  top: 90px;
+  height: 100px;
+  border: 1px solid var(--main-100);
+  border-radius: 50%;
+  transform: rotate(-14deg);
+}
+.document-sheet {
+  position: absolute;
+  width: 128px;
+  height: 165px;
+  background: linear-gradient(140deg, var(--main-50), var(--main-100));
+  border: 1px solid var(--main-100);
+  border-radius: 14px;
+  box-shadow: 0 16px 40px var(--shadow-1);
+}
+.document-sheet::after {
+  content: '';
+  position: absolute;
+  left: 25px;
+  right: 25px;
+  top: 55px;
+  height: 8px;
+  border-radius: 5px;
+  background: var(--main-200);
+  box-shadow:
+    0 25px 0 var(--main-200),
+    0 50px 0 var(--main-200);
+}
+.sheet-back {
+  right: 28px;
+  top: 8px;
+  opacity: 0.75;
+}
+.sheet-front {
+  left: 28px;
+  top: 55px;
+}
+.login-form :deep(.ant-input-affix-wrapper) {
+  min-height: 46px;
+  background: var(--gray-10);
+  border-color: var(--gray-200);
+  border-radius: 10px;
+}
+.login-form :deep(.ant-input) {
+  background: transparent;
+}
+.login-form :deep(.ant-form-item-label > label) {
+  font-weight: 500;
+  color: var(--gray-800);
 }
 </style>

@@ -1,27 +1,29 @@
 /* 深色模式 */
 :root.dark {
-  --main-1000: #e1f6fb;
-  --main-900: #c4eaf5;
-  --main-800: #a3d8e8;
-  --main-700: #82c3d6;
-  --main-600: #5faec2;
-  --main-500: #4a9fb8;
-  --main-400: #3996ae;
-  --main-300: #24839a;
-  --main-200: #046a82;
-  --main-100: #035065;
-  --main-50: #023944;
-  --main-40: #01151f;
-  --main-30: #010d14;
-  --main-20: #010a0f;
-  --main-10: #00070a;
-  --main-5: #000405;
-  --main-1: #000102;
-  --main-0: #000000;
+  --main-1000: #edf3ff;
+  --main-900: #dbe7ff;
+  --main-800: #bbd0ff;
+  --main-700: #a3bfff;
+  --main-600: #8badff;
+  --main-500: #78a2ff;
+  --main-400: #6490ed;
+  --main-300: #4465a3;
+  --main-200: #2a4274;
+  --main-100: #213255;
+  --main-50: #1a2946;
+  --main-40: #182338;
+  --main-30: #151e30;
+  --main-20: #131c2b;
+  --main-10: #111927;
+  --main-5: #0f1622;
+  --main-1: #0d1420;
+  --main-0: #0c121c;
+
+  --brand-on-primary: #101b32;
 
   /* 保留原有的 main 变量 */
-  --main-color: #4a9fb8;
-  --main-bright: #5faec2;
+  --main-color: var(--main-500);
+  --main-bright: var(--main-600);
 
   /* 辅助色：暖金色系，深色模式反转刻度，与 --main-* 对齐 */
   --second-1000: #faf3e2;
@@ -45,23 +47,23 @@
 
   --second-color: var(--second-500);
 
-  --gray-10000: #fafafa;
-  --gray-2000: #f8fafa;
-  --gray-1000: #f5f7f7;
-  --gray-900: #eff2f2;
-  --gray-800: #eef0f0;
-  --gray-700: #e4e6e6;
-  --gray-600: #d7d9d9;
-  --gray-500: #bdbfbf;
-  --gray-400: #979999;
-  --gray-300: #697070;
-  --gray-200: #4c4d4d;
-  --gray-150: #323333;
-  --gray-100: #1e1f1f;
-  --gray-50: #151616;
-  --gray-25: #0c0d0d;
-  --gray-10: #080808;
-  --gray-0: #030303;
+  --gray-10000: #f5f7fc;
+  --gray-2000: #eef2fa;
+  --gray-1000: #e9eef8;
+  --gray-900: #e1e7f2;
+  --gray-800: #d4ddec;
+  --gray-700: #b8c5d9;
+  --gray-600: #a1afc5;
+  --gray-500: #8898b1;
+  --gray-400: #6c7d98;
+  --gray-300: #46556d;
+  --gray-200: #334157;
+  --gray-150: #293448;
+  --gray-100: #232d3d;
+  --gray-50: #1b2433;
+  --gray-25: #17202e;
+  --gray-10: #141c29;
+  --gray-0: #101722;
 
   --color-success-10: #0f1810; /* 成功色-极深 */
   --color-success-50: #162312; /* 成功色-最深 */

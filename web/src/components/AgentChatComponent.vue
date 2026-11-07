@@ -981,11 +981,9 @@ const steeringRequestIds = reactive(new Set())
 let sendCooldownTimer = null
 // 预设的打招呼文本
 const greetingMessages = [
-  '语析，析万物之语',
-  '语析，与知识对话',
-  '答案藏在知识里，我来找',
-  '与知识对话，与答案相遇',
-  '你负责提问，我负责寻找'
+  '链证出海，让资料核查更清晰',
+  '上传产品资料，开始预审',
+  '核对资料，追溯依据，理清下一步'
 ]
 
 // 随机选择一个打招呼文本
@@ -2514,12 +2512,7 @@ const createClientRequestId = () => {
   return `req-${Date.now()}-${Math.random().toString(36).slice(2, 10)}`
 }
 
-const buildOptimisticHumanMessage = ({
-  requestId,
-  text,
-  imageContents = [],
-  attachments = []
-}) => {
+const buildOptimisticHumanMessage = ({ requestId, text, imageContents = [], attachments = [] }) => {
   const message = {
     id: requestId,
     role: 'user',
@@ -3952,7 +3945,7 @@ watch(currentChatId, (threadId, oldThreadId) => {
 }
 
 .chat {
-  --header-height: 40px;
+  --header-height: 54px;
 
   position: relative;
   flex: 1;
@@ -3971,7 +3964,7 @@ watch(currentChatId, (threadId, oldThreadId) => {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0 8px;
+    padding: 0 16px;
     flex-shrink: 0; /* Prevent header from shrinking */
     transition: padding-right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
@@ -4000,7 +3993,7 @@ watch(currentChatId, (threadId, oldThreadId) => {
       line-height: 20px;
       font-weight: 400;
       color: var(--text-primary);
-      max-width: 200px;
+      max-width: min(440px, 40vw);
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
@@ -4317,7 +4310,7 @@ watch(currentChatId, (threadId, oldThreadId) => {
 
 .chat-box {
   width: 100%;
-  max-width: 800px;
+  max-width: 880px;
   margin: 0 auto;
   flex-grow: 1;
   padding: 1rem 2rem;
@@ -4359,7 +4352,7 @@ watch(currentChatId, (threadId, oldThreadId) => {
 
   .message-input-wrapper {
     width: 100%;
-    max-width: 800px;
+    max-width: 880px;
     margin: 0 auto;
 
     .message-input-stage {
@@ -4588,7 +4581,7 @@ watch(currentChatId, (threadId, oldThreadId) => {
     left: 50%;
     transform: translate(-50%, -50%);
     bottom: auto;
-    max-width: 800px;
+    max-width: 880px;
     width: 90%;
     background: transparent;
     padding: 0;

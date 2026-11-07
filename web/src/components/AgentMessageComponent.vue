@@ -325,13 +325,13 @@ const parsedData = computed(() => {
   user-select: text;
   word-break: break-word;
   word-wrap: break-word;
-  font-size: 14px;
-  line-height: 24px;
+  font-size: 15px;
+  line-height: 1.85;
   box-sizing: border-box;
   color: var(--gray-10000);
   max-width: 100%;
   position: relative;
-  letter-spacing: 0.25px;
+  letter-spacing: normal;
 
   &.human,
   &.sent {
@@ -339,14 +339,14 @@ const parsedData = computed(() => {
     color: var(--gray-1000);
     background-color: var(--main-50);
     align-self: flex-end;
-    border-radius: 0.5rem;
+    border-radius: 14px;
     padding: 0.5rem 1rem;
   }
 
   &.assistant,
   &.received,
   &.ai {
-    color: initial;
+    color: var(--gray-1000);
     width: 100%;
     text-align: left;
     margin: 0;

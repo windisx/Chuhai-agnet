@@ -5,7 +5,7 @@
         <div class="disabled-content">
           <h4>知识图谱不可用</h4>
           <p>当前知识库类型 "{{ kbTypeLabel }}" 不支持知识图谱功能。</p>
-          <p>只有 Yuxi 类型的知识库支持知识图谱。</p>
+          <p>只有本地知识库支持知识图谱。</p>
         </div>
       </div>
       <div v-else class="graph-wrapper">
@@ -329,7 +329,8 @@
             placeholder='例如 {"temperature":0.1}'
           />
           <div class="form-item-hint">
-            输入的 JSON 对象会作为 model_params 传给抽取模型调用；如需设置超时，请使用上方字段。关闭百炼等模型的思考模式需写在
+            输入的 JSON 对象会作为 model_params
+            传给抽取模型调用；如需设置超时，请使用上方字段。关闭百炼等模型的思考模式需写在
             extra_body 中，例如 {"extra_body":{"enable_thinking":false}}。
           </div>
         </a-form-item>
@@ -379,14 +380,7 @@ import { ref, computed, watch, nextTick, onUnmounted, reactive } from 'vue'
 import { useDatabaseStore } from '@/stores/database'
 import { useTaskerStore } from '@/stores/tasker'
 import { useConfigStore } from '@/stores/config'
-import {
-  RefreshCw,
-  Settings,
-  Search,
-  Loader2,
-  Database,
-  Network
-} from '@lucide/vue'
+import { RefreshCw, Settings, Search, Loader2, Database, Network } from '@lucide/vue'
 import GraphCanvas from '@/components/GraphCanvas.vue'
 import GraphDetailPanel from '@/components/GraphDetailPanel.vue'
 import ResourceEmptyState from '@/components/shared/ResourceEmptyState.vue'
@@ -624,7 +618,9 @@ const fillGraphConfigForm = () => {
   graphConfigForm.model_spec = options.model_spec || configStore.config?.default_model || ''
   graphConfigForm.schema = options.schema || ''
   graphConfigForm.concurrency_count = Number(options.concurrency_count || 50)
-  graphConfigForm.timeout_seconds = Number(options.timeout_seconds || DEFAULT_EXTRACTION_TIMEOUT_SECONDS)
+  graphConfigForm.timeout_seconds = Number(
+    options.timeout_seconds || DEFAULT_EXTRACTION_TIMEOUT_SECONDS
+  )
   graphConfigForm.model_params_text = options.model_params
     ? JSON.stringify(options.model_params)
     : ''
@@ -1258,7 +1254,9 @@ onUnmounted(() => {
 .settings-expand-enter-active,
 .settings-expand-leave-active {
   transform-origin: top left;
-  transition: transform 0.2s ease, opacity 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    opacity 0.2s ease;
 }
 
 .settings-expand-enter-from,
