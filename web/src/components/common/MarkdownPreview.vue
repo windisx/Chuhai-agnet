@@ -1131,6 +1131,9 @@ const showCopiedFeedback = (btn) => {
   color: var(--gray-1000);
   font-size: 15px;
   line-height: 1.85;
+  strong {
+    font-weight: 650;
+  }
   p {
     margin: 0 0 18px;
   }
