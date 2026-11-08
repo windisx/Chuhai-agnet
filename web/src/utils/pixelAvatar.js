@@ -15,8 +15,11 @@ const normalizeSeed = (id) => {
 
 // 保留原调用入口，默认头像使用本地素材，不向第三方传递用户标识。
 export const generatePixelAvatar = (id, kind = 'user') => {
-  normalizeSeed(id)
-  return kind === 'agent' ? BRAND.assistantAvatar : BRAND.userAvatar
+  const seed = normalizeSeed(id)
+  if (kind !== 'agent') return BRAND.userAvatar
+  let hash = 0
+  for (const char of seed) hash = (hash * 31 + char.codePointAt(0)) >>> 0
+  return `/illustrations/agents/agent-${(hash % 9) + 1}.jpg`
 }
 
 export const getAvatarInitials = (name, kind = 'user') => {

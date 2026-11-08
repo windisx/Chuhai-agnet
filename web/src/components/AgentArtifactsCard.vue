@@ -7,7 +7,7 @@
         :title="`打开 ${file.name}`"
         @click="openPreview(file)"
       >
-        <FileTypeIcon :name="file.path" :size="20" class="item-icon" />
+        <FileTypeIcon :name="file.path" :size="28" class="item-icon" />
         <div class="item-meta">
           <div class="item-name">{{ file.name }}</div>
           <div class="item-desc">{{ getFileMetaLabel(file.path) }}</div>

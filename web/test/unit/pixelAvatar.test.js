@@ -12,7 +12,15 @@ import {
 test('local avatars preserve roles without disclosing identifiers to an external service', () => {
   assert.equal(generatePixelAvatar('user-001'), '/illustrations/user.jpg')
   assert.equal(generatePixelAvatar(' user/中文 '), '/illustrations/user.jpg')
-  assert.equal(generatePixelAvatar('agent-001', 'agent'), '/illustrations/assistant.jpg')
+  assert.match(
+    generatePixelAvatar('agent-001', 'agent'),
+    /^\/illustrations\/agents\/agent-[1-9]\.jpg$/
+  )
+  assert.equal(generatePixelAvatar('agent-001', 'agent'), generatePixelAvatar('agent-001', 'agent'))
+  const agentAvatars = new Set(
+    Array.from({ length: 9 }, (_, i) => generatePixelAvatar(`agent-${i}`, 'agent'))
+  )
+  assert.equal(agentAvatars.size, 9)
   assert.throws(() => generatePixelAvatar(''), /requires an id/)
   assert.throws(() => generatePixelAvatar(null), /requires an id/)
 
