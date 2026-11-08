@@ -9,19 +9,10 @@ import {
   getAvatarInitials
 } from '../../src/utils/pixelAvatar.js'
 
-const DICEBEAR_GLYPHS_AVATAR_BASE_URL = 'https://api.dicebear.com/10.x/glyphs/svg'
-
-test('pixel avatars are stable and provide localized fallbacks', () => {
-  assert.equal(generatePixelAvatar('user-001'), generatePixelAvatar('user-001'))
-  assert.notEqual(generatePixelAvatar('user-001'), generatePixelAvatar('user-002'))
-  assert.equal(
-    generatePixelAvatar('user-003'),
-    `${DICEBEAR_GLYPHS_AVATAR_BASE_URL}?seed=user-003`
-  )
-  assert.equal(
-    generatePixelAvatar(' user/中文 '),
-    `${DICEBEAR_GLYPHS_AVATAR_BASE_URL}?seed=user%2F%E4%B8%AD%E6%96%87`
-  )
+test('local avatars preserve roles without disclosing identifiers to an external service', () => {
+  assert.equal(generatePixelAvatar('user-001'), '/illustrations/user.jpg')
+  assert.equal(generatePixelAvatar(' user/中文 '), '/illustrations/user.jpg')
+  assert.equal(generatePixelAvatar('agent-001', 'agent'), '/illustrations/assistant.jpg')
   assert.throws(() => generatePixelAvatar(''), /requires an id/)
   assert.throws(() => generatePixelAvatar(null), /requires an id/)
 

@@ -119,7 +119,7 @@ watch(
   font-size: var(--fallback-avatar-font-size);
   font-weight: 600;
   line-height: 1;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.18);
+  text-shadow: none;
   user-select: none;
 }
 

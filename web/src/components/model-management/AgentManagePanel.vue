@@ -65,7 +65,7 @@ const agentStats = computed(() => ({
   ).length
 }))
 const canManageAgent = (agent) => !!agent?.can_manage
-const getAgentDefaultIconSrc = (agent) => (agent.id ? generatePixelAvatar(agent.id) : '')
+const getAgentDefaultIconSrc = (agent) => (agent.id ? generatePixelAvatar(agent.id, 'agent') : '')
 
 /** 返回智能体共享范围的简短展示文案。 */
 const getAgentShareLabel = (agent) => getShareConfigLabel(agent?.share_config)

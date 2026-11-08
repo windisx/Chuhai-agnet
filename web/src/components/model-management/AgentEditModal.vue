@@ -190,7 +190,7 @@ const getAgentShareAllowedLevels = () => {
 
 const agentModalTitle = computed(() => (editingAgentId.value ? '编辑智能体' : '新增智能体'))
 const agentPreviewDefaultIcon = computed(() =>
-  editingAgentId.value ? generatePixelAvatar(editingAgentId.value) : ''
+  editingAgentId.value ? generatePixelAvatar(editingAgentId.value, 'agent') : ''
 )
 const agentPreviewName = computed(() => agentForm.name || editingAgentId.value || '智能体')
 const selectedBackendOption = computed(() =>

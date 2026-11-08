@@ -272,7 +272,7 @@
               <div class="entity-cell">
                 <FallbackAvatar
                   :src="record.agent_avatar"
-                  :default-src="generatePixelAvatar(record.agent_id)"
+                  :default-src="generatePixelAvatar(record.agent_id, 'agent')"
                   :name="record.agent_name || record.agent_id"
                   :seed="record.agent_id"
                   kind="agent"

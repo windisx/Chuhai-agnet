@@ -249,7 +249,7 @@ const agentQuickSwitchOptions = computed(() =>
       label: agent.name || agent.id,
       value: agent.id,
       icon: agent.icon || '',
-      defaultIcon: agent.id ? generatePixelAvatar(agent.id) : '',
+      defaultIcon: agent.id ? generatePixelAvatar(agent.id, 'agent') : '',
       isBuiltin: isBuiltinAgent(agent)
     }))
 )

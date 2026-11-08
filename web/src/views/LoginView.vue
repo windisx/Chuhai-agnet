@@ -32,10 +32,7 @@
           <div class="login-brand-art" aria-hidden="true">
             <h2>资料有据。<br />出海有序。</h2>
             <p>让每次资料提交，都有清晰依据。</p>
-            <div class="document-orbit">
-              <div class="document-sheet sheet-back"></div>
-              <div class="document-sheet sheet-front"></div>
-            </div>
+            <img :src="BRAND.documentIllustration" alt="" class="document-illustration" />
           </div>
         </div>
 
@@ -1068,51 +1065,12 @@ onUnmounted(() => {
   font-size: 15px;
   line-height: 1.8;
 }
-.document-orbit {
-  height: 240px;
-  margin-top: 32px;
-}
-.document-orbit::after {
-  content: '';
-  position: absolute;
-  left: -50px;
-  right: -50px;
-  top: 90px;
-  height: 100px;
-  border: 1px solid var(--main-100);
-  border-radius: 50%;
-  transform: rotate(-14deg);
-}
-.document-sheet {
-  position: absolute;
-  width: 128px;
-  height: 165px;
-  background: linear-gradient(140deg, var(--main-50), var(--main-100));
-  border: 1px solid var(--main-100);
-  border-radius: 14px;
-  box-shadow: 0 16px 40px var(--shadow-1);
-}
-.document-sheet::after {
-  content: '';
-  position: absolute;
-  left: 25px;
-  right: 25px;
-  top: 55px;
-  height: 8px;
-  border-radius: 5px;
-  background: var(--main-200);
-  box-shadow:
-    0 25px 0 var(--main-200),
-    0 50px 0 var(--main-200);
-}
-.sheet-back {
-  right: 28px;
-  top: 8px;
-  opacity: 0.75;
-}
-.sheet-front {
-  left: 28px;
-  top: 55px;
+.document-illustration {
+  display: block;
+  width: 100%;
+  max-width: 320px;
+  margin: 24px auto 0;
+  border-radius: 28px;
 }
 .login-form :deep(.ant-input-affix-wrapper) {
   min-height: 46px;

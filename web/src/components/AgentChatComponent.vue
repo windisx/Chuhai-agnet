@@ -166,6 +166,7 @@
 
               <!-- 打招呼区域 - 在输入框上方 -->
               <div v-if="isNewConversation" class="chat-greeting-input">
+                <img :src="BRAND.assistantAvatar" alt="链证出海助手" class="greeting-avatar" />
                 <h1>{{ randomGreeting }}</h1>
               </div>
 
@@ -861,6 +862,7 @@ import {
   Trash2
 } from '@lucide/vue'
 import FileTypeIcon from '@/components/common/FileTypeIcon.vue'
+import { BRAND } from '@/config/brand'
 import { generatePixelAvatar } from '@/utils/pixelAvatar'
 import { CheckCircleOutlined, CloseCircleOutlined, SyncOutlined } from '@ant-design/icons-vue'
 import AgentInputArea from '@/components/AgentInputArea.vue'
@@ -1198,7 +1200,7 @@ const getSubagentIconSrc = (run) => {
 }
 
 const getSubagentDefaultIconSrc = (run) =>
-  run?.subagent_slug ? generatePixelAvatar(run.subagent_slug) : ''
+  run?.subagent_slug ? generatePixelAvatar(run.subagent_slug, 'agent') : ''
 
 const normalizePanelPath = (path) => String(path || '').replace(/\/+$/, '')
 
@@ -5661,5 +5663,16 @@ watch(currentChatId, (threadId, oldThreadId) => {
   .debug-icon {
     color: var(--gray-700);
   }
+}
+</style>
+
+<style scoped>
+.greeting-avatar {
+  width: 72px;
+  height: 72px;
+  display: block;
+  margin: 0 auto 16px;
+  border-radius: 50%;
+  object-fit: cover;
 }
 </style>

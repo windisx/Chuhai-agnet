@@ -1,23 +1,9 @@
-const DICEBEAR_GLYPHS_AVATAR_BASE_URL = 'https://api.dicebear.com/10.x/glyphs/svg'
+import { BRAND } from '../config/brand.js'
 
 export const AVATAR_BACKGROUND_TOKENS = [
-  { background: 'linear-gradient(135deg, var(--main-600), var(--color-info-500))', color: '#fff' },
-  {
-    background: 'linear-gradient(135deg, var(--chart-palette-5), var(--chart-palette-9))',
-    color: '#fff'
-  },
-  {
-    background: 'linear-gradient(135deg, var(--chart-palette-7), var(--chart-palette-3))',
-    color: '#fff'
-  },
-  {
-    background: 'linear-gradient(135deg, var(--color-accent-500), var(--chart-palette-6))',
-    color: '#fff'
-  },
-  {
-    background: 'linear-gradient(135deg, var(--chart-palette-4), var(--color-error-500))',
-    color: '#fff'
-  }
+  { background: 'var(--main-50)', color: 'var(--main-700)' },
+  { background: 'var(--main-100)', color: 'var(--main-800)' },
+  { background: 'var(--gray-100)', color: 'var(--gray-800)' }
 ]
 
 const normalizeSeed = (id) => {
@@ -27,9 +13,10 @@ const normalizeSeed = (id) => {
   return String(id).trim()
 }
 
-export const generatePixelAvatar = (id) => {
-  const seed = normalizeSeed(id)
-  return `${DICEBEAR_GLYPHS_AVATAR_BASE_URL}?seed=${encodeURIComponent(seed)}`
+// 保留原调用入口，默认头像使用本地素材，不向第三方传递用户标识。
+export const generatePixelAvatar = (id, kind = 'user') => {
+  normalizeSeed(id)
+  return kind === 'agent' ? BRAND.assistantAvatar : BRAND.userAvatar
 }
 
 export const getAvatarInitials = (name, kind = 'user') => {
