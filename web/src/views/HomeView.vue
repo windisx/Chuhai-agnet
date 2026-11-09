@@ -10,7 +10,7 @@
       </a-result>
     </div>
     <template v-else>
-      <div class="ambient" aria-hidden="true"><span></span><span></span></div>
+      <HomeOceanBackdrop :paused="backgroundPaused" />
       <header class="site-header">
         <div class="logo">
           <img :src="BRAND.logo" :alt="BRAND.name" class="logo-img" />
@@ -21,14 +21,19 @@
       <main class="hero-section">
         <div class="hero-content">
           <p class="hero-eyebrow">出海资料预审智能体</p>
-          <h1>资料有据。<span>出海有序。</span></h1>
+          <h1>资料有据，<span>出海有序。</span></h1>
           <p class="subtitle">{{ currentSubtitle }}</p>
           <button class="start-button lucide-icon-btn" @click="goToChat">
             <span>开始体验</span><ArrowRight :size="20" />
           </button>
         </div>
       </main>
-      <footer class="footer">{{ BRAND.footer }}</footer>
+      <footer class="footer">
+        <span>{{ BRAND.footer }}</span>
+        <button class="motion-toggle" :aria-pressed="backgroundPaused" @click="backgroundPaused = !backgroundPaused">
+          {{ backgroundPaused ? '播放背景动效' : '暂停背景动效' }}
+        </button>
+      </footer>
     </template>
   </div>
 </template>
@@ -42,6 +47,7 @@ import { healthApi } from '@/apis/system_api'
 import UserInfoComponent from '@/components/UserInfoComponent.vue'
 import { ArrowRight } from '@lucide/vue'
 import { BRAND } from '@/config/brand'
+import HomeOceanBackdrop from '@/components/HomeOceanBackdrop.vue'
 
 const router = useRouter()
 const userStore = useUserStore()
@@ -51,6 +57,7 @@ const infoStore = useInfoStore()
 const isLoading = ref(true)
 const error = ref(null)
 const subtitleIndex = ref(0)
+const backgroundPaused = ref(false)
 let subtitleTimer = null
 
 const subtitleOptions = computed(() => [BRAND.subtitle])
@@ -135,6 +142,8 @@ onUnmounted(() => {
 
 <style lang="less" scoped>
 .home-container {
+  position: relative;
+  isolation: isolate;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -230,40 +239,29 @@ h1 span {
   outline-offset: 4px;
 }
 .footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
   z-index: 1;
   padding: 28px 20px;
   text-align: center;
   color: var(--gray-600);
   font-size: 12px;
 }
-.ambient {
-  position: absolute;
-  inset: 0;
-  overflow: hidden;
-  pointer-events: none;
-  background: radial-gradient(ellipse at 50% 45%, var(--main-30), transparent 65%);
+.motion-toggle {
+  border: 1px solid var(--gray-200);
+  border-radius: 20px;
+  padding: 6px 12px;
+  background: var(--gray-10);
+  color: var(--gray-600);
+  font: inherit;
+  font-size: 11px;
+  cursor: pointer;
 }
-.ambient span {
-  position: absolute;
-  bottom: -340px;
-  width: 620px;
-  height: 620px;
-  border: 1px solid var(--main-100);
-  border-radius: 50%;
-  opacity: 0.55;
-}
-.ambient span::after {
-  content: '';
-  position: absolute;
-  inset: 45px;
-  border: 1px solid var(--main-100);
-  border-radius: 50%;
-}
-.ambient span:first-child {
-  left: -360px;
-}
-.ambient span:last-child {
-  right: -360px;
+.motion-toggle:focus-visible {
+  outline: 3px solid var(--main-200);
+  outline-offset: 3px;
 }
 .loading-container,
 .error-container {
@@ -299,6 +297,9 @@ h1 span {
   }
 }
 @media (prefers-reduced-motion: reduce) {
+  .motion-toggle {
+    display: none;
+  }
   .start-button {
     transition: none;
   }
