@@ -36,6 +36,7 @@ from yuxi.services.identity_admin_service import (
     list_managed_users_page,
 )
 from yuxi.services.operation_log_service import log_operation
+from yuxi.services.registration_service import RegistrationError, register_public_user
 from yuxi.services.user_identity_service import generate_unique_uid, is_valid_phone_number, validate_username
 from yuxi.storage.minio import upload_image_to_minio
 from yuxi.storage.minio.client import normalize_public_minio_url
@@ -78,6 +79,15 @@ class UserCreate(BaseModel):
     role: str = "user"
     phone_number: str | None = None
     department_id: int | None = None
+
+
+class PublicRegistration(BaseModel):
+    """访客只能提交登录账号与密码，不能指定角色或部门。"""
+
+    model_config = ConfigDict(extra="forbid")
+
+    uid: str = Field(min_length=3, max_length=20, pattern=r"^[a-zA-Z][a-zA-Z0-9_]*$")
+    password: str = Field(min_length=8, max_length=128)
 
 
 class UserUpdate(BaseModel):
@@ -516,6 +526,22 @@ async def update_profile(
 # =============================================================================
 # === 用户管理分组 ===
 # =============================================================================
+
+
+@auth.post("/register", response_model=UserResponse, status_code=201)
+async def register_user(data: PublicRegistration, request: Request, db: AsyncSession = Depends(get_db)):
+    """访客注册普通用户并建立独立空间，不加入已有部门。"""
+    try:
+        user = await register_public_user(
+            db,
+            uid=data.uid,
+            password=data.password,
+            client_ip=request.client.host if request.client else "unknown",
+        )
+    except RegistrationError as exc:
+        headers = {"Retry-After": str(exc.retry_after)} if exc.retry_after else None
+        raise HTTPException(status_code=exc.status_code, detail=exc.message, headers=headers) from exc
+    return user.to_dict()
 
 
 @auth.post("/users", response_model=UserResponse)

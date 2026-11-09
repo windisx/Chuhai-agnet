@@ -29,10 +29,10 @@
       <div class="login-card">
         <!-- 左侧图片 -->
         <div class="card-side is-image">
-          <div class="login-brand-art" aria-hidden="true">
-            <h2>资料有据。<br />出海有序。</h2>
+          <div class="login-brand-art">
+            <h2>资料有据，<br />出海有序。</h2>
             <p>让每次资料提交，都有清晰依据。</p>
-            <img :src="BRAND.documentIllustration" alt="" class="document-illustration" />
+            <LoginDocumentMotion />
           </div>
         </div>
 
@@ -43,8 +43,8 @@
               <!-- 如果是在初始化，显示特定标题 -->
               <h2 v-if="isFirstRun" class="init-title">系统初始化，请创建超级管理员</h2>
               <template v-else
-                ><h2 class="welcome-text">欢迎登录</h2>
-                <p class="welcome-description">登录链证出海，继续资料预审</p></template
+                ><h2 class="welcome-text">{{ isRegistering ? '创建账号' : '欢迎登录' }}</h2>
+                <p class="welcome-description">{{ isRegistering ? '注册链证出海，开启资料预审' : '登录链证出海，继续资料预审' }}</p></template
               >
             </header>
 
@@ -163,6 +163,33 @@
                 </a-form>
               </div>
 
+              <div v-else-if="isRegistering" class="login-form">
+                <a-form :model="registrationForm" layout="vertical" @finish="handleRegister">
+                  <a-form-item label="登录账号" name="uid" :rules="[{ required: true, message: '请输入登录账号' }, { pattern: /^[a-zA-Z][a-zA-Z0-9_]{2,19}$/, message: '3至20位，以字母开头，仅含字母、数字或下划线' }]">
+                    <a-input v-model:value="registrationForm.uid" placeholder="3至20位，以字母开头" :maxlength="20" autocomplete="username">
+                      <template #prefix><user-icon size="18" /></template>
+                    </a-input>
+                  </a-form-item>
+                  <a-form-item label="密码" name="password" :rules="[{ required: true, message: '请输入密码' }, { min: MIN_PASSWORD_LENGTH, max: 128, message: '密码长度为8至128个字符' }]">
+                    <a-input-password v-model:value="registrationForm.password" placeholder="至少8个字符" autocomplete="new-password" />
+                  </a-form-item>
+                  <a-form-item label="确认密码" name="confirmPassword" :dependencies="['password']" :rules="[{ required: true, message: '请再次输入密码' }, { validator: validateRegistrationPassword }]">
+                    <a-input-password v-model:value="registrationForm.confirmPassword" autocomplete="new-password" />
+                  </a-form-item>
+                  <a-form-item v-if="showAgreementConsent" class="agreement-form-item">
+                    <a-checkbox v-model:checked="agreementAccepted">
+                      我已阅读并同意
+                      <a class="agreement-link" :href="userAgreementUrl" target="_blank" rel="noopener noreferrer" @click.stop>《用户协议》</a>
+                      <a class="agreement-link" :href="privacyPolicyUrl" target="_blank" rel="noopener noreferrer" @click.stop>《隐私协议》</a>
+                    </a-checkbox>
+                  </a-form-item>
+                  <a-form-item>
+                    <a-button type="primary" html-type="submit" :loading="loading" block>注册账号</a-button>
+                  </a-form-item>
+                </a-form>
+                <p class="account-switch">已有账号？<a-button type="link" :disabled="loading" @click="switchAuthMode(false)">返回登录</a-button></p>
+              </div>
+
               <!-- 登录表单 -->
               <div v-else class="login-form">
                 <a-form :model="loginForm" @finish="handleLogin" layout="vertical">
@@ -229,6 +256,8 @@
                   </a-form-item>
                 </a-form>
 
+                <p class="account-switch">还没有账号？<a-button type="link" :disabled="loading" @click="switchAuthMode(true)">立即注册</a-button></p>
+
                 <!-- OIDC 登录选项  -->
                 <div v-if="oidcChecking || oidcEnabled" class="third-party-login">
                   <div class="divider">
@@ -292,6 +321,7 @@ import {
 import { tryAutoStartOIDC, sanitizeRedirect } from '@/utils/oidcAutoStart'
 import { MIN_PASSWORD_LENGTH } from '@/utils/passwordValidation'
 import { BRAND } from '@/config/brand'
+import LoginDocumentMotion from '@/components/LoginDocumentMotion.vue'
 
 const router = useRouter()
 const route = useRoute()
@@ -314,6 +344,8 @@ const isFirstRun = ref(false)
 const loading = ref(false)
 const errorMessage = ref('')
 const agreementAccepted = ref(false)
+const isRegistering = ref(false)
+const registrationForm = reactive({ uid: '', password: '', confirmPassword: '' })
 const serverStatus = ref('loading')
 const serverError = ref('')
 const healthChecking = ref(false)
@@ -408,6 +440,35 @@ const ensureAgreementAccepted = () => {
   const warningMessage = '请先阅读并同意《用户协议》《隐私协议》'
   message.warning(warningMessage)
   return false
+}
+
+const switchAuthMode = (registering) => {
+  isRegistering.value = registering
+  errorMessage.value = ''
+  agreementAccepted.value = false
+  registrationForm.password = ''
+  registrationForm.confirmPassword = ''
+  loginForm.password = ''
+}
+
+const validateRegistrationPassword = async (rule, value) => {
+  if (value !== registrationForm.password) throw new Error('两次输入的密码不一致')
+}
+
+const handleRegister = async () => {
+  if (loading.value || !ensureAgreementAccepted()) return
+  loading.value = true
+  errorMessage.value = ''
+  try {
+    const user = await authApi.register({ uid: registrationForm.uid, password: registrationForm.password })
+    loginForm.loginId = user.uid
+    switchAuthMode(false)
+    message.success('注册成功，请使用新账号登录')
+  } catch (error) {
+    errorMessage.value = error.message || '注册失败，请稍后重试'
+  } finally {
+    loading.value = false
+  }
 }
 
 // 处理登录
@@ -1065,13 +1126,8 @@ onUnmounted(() => {
   font-size: 15px;
   line-height: 1.8;
 }
-.document-illustration {
-  display: block;
-  width: 100%;
-  max-width: 320px;
-  margin: 24px auto 0;
-  border-radius: 28px;
-}
+.account-switch { text-align: center; color: var(--gray-600); font-size: 13px; }
+.account-switch :deep(.ant-btn) { height: auto; padding: 2px 4px; font-size: 13px; }
 .login-form :deep(.ant-input-affix-wrapper) {
   min-height: 46px;
   background: var(--gray-10);

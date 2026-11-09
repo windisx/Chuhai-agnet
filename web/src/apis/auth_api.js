@@ -65,6 +65,10 @@ async function initialize(admin) {
   return apiPost('/api/auth/initialize', admin, {}, false)
 }
 
+async function register({ uid, password }) {
+  return apiPost('/api/auth/register', { uid, password }, {}, false)
+}
+
 async function checkFirstRun() {
   return apiGet('/api/auth/check-first-run', {}, false)
 }
@@ -131,6 +135,7 @@ async function approveCLIAuthSession(userCode) {
 }
 
 export const authApi = {
+  register,
   login,
   initialize,
   checkFirstRun,
