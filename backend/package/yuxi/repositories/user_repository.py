@@ -198,16 +198,16 @@ class UserRepository:
             return list(page_result.all()), total_result.scalar() or 0
 
     async def list_legacy_self_registered_users(self) -> list[User]:
-        """锁定有旧版自助注册审计且仍属于原独立部门的普通账号。"""
+        """锁定有旧版自助注册审计且仍属于原个人部门的非超级管理员账号。"""
         async with self._session() as session:
             registration = select(OperationLog.id).where(
                 OperationLog.user_id == User.id,
                 OperationLog.operation == "用户注册",
-                OperationLog.details == "访客注册普通用户账户",
+                OperationLog.details.in_(["访客注册普通用户账户", "访客注册个人空间管理员账户"]),
             ).exists()
             result = await session.execute(
                 select(User).join(Department, User.department_id == Department.id).where(
-                    User.role == "user", User.is_deleted == 0,
+                    User.role.in_(["user", "admin"]), User.is_deleted == 0,
                     Department.name == "个人空间-" + User.uid,
                     Department.description == "自助注册账号的独立空间",
                     registration,

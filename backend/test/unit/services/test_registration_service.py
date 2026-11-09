@@ -40,7 +40,7 @@ async def test_registration_fixes_role_and_commits_audit_with_user():
     values = repo.create.call_args.args[0]
     assert values == {
         "uid": "visitor", "username": "visitor", "password_hash": "hashed",
-        "role": "admin", "department_id": 123, "phone_number": None,
+        "role": "superadmin", "department_id": 123, "phone_number": None,
     }
     assert user is repo.create.return_value
     log.assert_awaited_once()
@@ -93,7 +93,7 @@ async def test_existing_registration_upgrade_only_processes_repository_candidate
         patch("yuxi.services.registration_service.log_operation", new_callable=AsyncMock) as log,
     ):
         assert await promote_self_registered_users(db) == 1
-    assert user.role == "admin"
+    assert user.role == "superadmin"
     repo.save.assert_awaited_once_with(user)
     log.assert_awaited_once()
     db.commit.assert_awaited_once()

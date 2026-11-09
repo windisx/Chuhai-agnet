@@ -530,7 +530,7 @@ async def update_profile(
 
 @auth.post("/register", response_model=UserResponse, status_code=201)
 async def register_user(data: PublicRegistration, request: Request, db: AsyncSession = Depends(get_db)):
-    """访客注册个人空间管理员，不加入已有部门或授予超级管理员权限。"""
+    """访客按当前注册策略获得超级管理员身份，并建立个人部门。"""
     try:
         user = await register_public_user(
             db,
@@ -586,7 +586,7 @@ async def create_user(
     hashed_password = AuthUtils.hash_password(user_data.password)
 
     # 检查角色权限
-    # 禁止创建超级管理员账户（系统只能有一个超级管理员）
+    # 用户管理入口不允许指定超级管理员；自助注册使用独立的角色策略
     if user_data.role == "superadmin":
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
