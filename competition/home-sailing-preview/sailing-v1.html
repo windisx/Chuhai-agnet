@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="zh-CN">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>链证出海 · 帆船海面动态预览</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#dceaf2;font-family:-apple-system,BlinkMacSystemFont,"Microsoft YaHei",sans-serif;color:#142b43;overflow:hidden}canvas{position:fixed;inset:0;width:100%;height:100%}.veil{position:fixed;inset:0;background:linear-gradient(180deg,#ffffff38 0%,#ffffff52 30%,#ffffff36 49%,transparent 75%);pointer-events:none}header{position:absolute;top:30px;left:40px;font-weight:650;font-size:21px;display:flex;gap:12px;align-items:center}header span{color:#2871d1;font-size:28px}.hero{position:absolute;top:28%;width:100%;text-align:center;padding:0 20px}.eyebrow{display:inline-block;font-size:12px;border:1px solid #ffffff80;border-radius:30px;background:#ffffff73;padding:7px 16px;backdrop-filter:blur(10px)}h1{font-size:clamp(32px,4.1vw,64px);font-weight:650;letter-spacing:-2px;line-height:1.35;margin:24px 0}h1 span{color:#425b73}.subtitle{font-size:clamp(13px,1.2vw,18px);color:#344e67;line-height:1.8}button{border:0;border-radius:30px;padding:15px 32px;background:#2465e9;color:white;font:inherit;font-size:16px;margin-top:26px;box-shadow:0 8px 25px #193f7e26;cursor:pointer}footer{position:absolute;bottom:22px;width:100%;text-align:center;color:#ffffffdd;font-size:12px;text-shadow:0 1px 5px #183a60}.preview-label{position:absolute;bottom:20px;left:24px;color:#ffffffc9;font-size:10px}.loading{position:absolute;bottom:50px;width:100%;text-align:center;font-size:12px} @media(max-width:600px){header{left:22px;top:22px;font-size:18px}.hero{top:25%}h1 span{display:block}.preview-label{bottom:45px;width:100%;left:0;text-align:center}.subtitle{max-width:310px;margin:auto}}
+</style>
+<canvas id="sea" aria-hidden="true"></canvas><div class="veil"></div>
+<header><span>▱</span>链证出海</header>
+<main class="hero"><div class="eyebrow">出海资料预审智能体</div><h1>资料有据，<span>出海有序。</span></h1><p class="subtitle">核对产品资料，追溯证据来源，理清补件事项。</p><button type="button" onclick="this.textContent='首页背景效果预览'">开始体验　→</button></main>
+<div id="loading" class="loading">正在加载海面与帆船…</div><footer>链证出海 · 辅助资料预审</footer><div class="preview-label">独立动态预览 · 持续循环 · 尚未替换网站背景</div>
+<script>
+const canvas=document.getElementById('sea'),ctx=canvas.getContext('2d');
+const ocean=new Image(),boat=new Image();ocean.src='sea.png';boat.src='boat.png';
+let w=innerWidth,h=innerHeight;
+function resize(){w=innerWidth;h=innerHeight;const dpr=Math.min(devicePixelRatio,1.5);canvas.width=w*dpr;canvas.height=h*dpr;ctx.setTransform(dpr,0,0,dpr,0,0)}
+addEventListener('resize',resize);resize();
+const ships=[{x:.13,y:.94,size:.16,speed:.0035,phase:0},{x:.35,y:.86,size:.065,speed:.0027,phase:2},{x:.72,y:.99,size:.22,speed:.0042,phase:4},{x:.9,y:.9,size:.09,speed:.003,phase:1}];
+Promise.all([ocean.decode(),boat.decode()]).then(()=>{
+ document.getElementById('loading').hidden=true;const start=performance.now();
+ function frame(now){const t=(now-start)/1000,scale=Math.max(w/ocean.width,h/ocean.height),sw=w/scale,sh=h/scale,sx=(ocean.width-sw)/2,sy=(ocean.height-sh)/2;
+  ctx.drawImage(ocean,sx,sy,sw,sh,0,0,w,h);
+  for(let y=Math.floor(h*.43);y<h;y+=3){const depth=(y/h-.43)/.57,shift=Math.sin(y*.032-t*.65)*depth*3;ctx.drawImage(ocean,sx,sy+y/scale,sw,3/scale,shift,y,w+3,3.5)}
+  for(const ship of ships){const bh=Math.max(42,h*ship.size),bw=bh*boat.width/boat.height,x=((ship.x*w+t*ship.speed*w)%(w+bw*2))-bw,y=h*ship.y+Math.sin(t*1.1+ship.phase)*2.2;
+   ctx.save();ctx.globalAlpha=.16;ctx.fillStyle='#fff';ctx.beginPath();ctx.ellipse(x+bw*.4,y-1,bw*.85,3+Math.sin(t+ship.phase),0,0,Math.PI*2);ctx.fill();ctx.restore();
+   ctx.save();ctx.translate(x+bw/2,y);ctx.rotate(Math.sin(t*.8+ship.phase)*.012);ctx.drawImage(boat,-bw/2,-bh,bw,bh);ctx.restore();
+  }
+  requestAnimationFrame(frame);
+ }
+ requestAnimationFrame(frame);
+}).catch(()=>{document.getElementById('loading').textContent='素材加载失败，请将本页与sea.png、boat.png放在同一目录。'});
+</script>
+</html>
