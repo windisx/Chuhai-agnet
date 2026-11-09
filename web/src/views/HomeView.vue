@@ -20,9 +20,7 @@
       </header>
       <main class="hero-section">
         <div class="hero-content">
-          <p class="hero-eyebrow">出海资料预审智能体</p>
           <h1>资料有据，<span>出海有序。</span></h1>
-          <p class="subtitle">{{ currentSubtitle }}</p>
           <button class="start-button lucide-icon-btn" @click="goToChat">
             <span>开始体验</span><ArrowRight :size="20" />
           </button>
@@ -36,7 +34,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useUserStore } from '@/stores/user'
 import { useInfoStore } from '@/stores/info'
@@ -53,33 +51,6 @@ const infoStore = useInfoStore()
 // 加载状态
 const isLoading = ref(true)
 const error = ref(null)
-const subtitleIndex = ref(0)
-let subtitleTimer = null
-
-const subtitleOptions = computed(() => [BRAND.subtitle])
-
-const currentSubtitle = computed(() => subtitleOptions.value[subtitleIndex.value] || '')
-
-const stopSubtitleCarousel = () => {
-  if (subtitleTimer) {
-    clearInterval(subtitleTimer)
-    subtitleTimer = null
-  }
-}
-
-const startSubtitleCarousel = () => {
-  stopSubtitleCarousel()
-  subtitleIndex.value = 0
-
-  if (subtitleOptions.value.length <= 1) {
-    return
-  }
-
-  subtitleTimer = setInterval(() => {
-    subtitleIndex.value = (subtitleIndex.value + 1) % subtitleOptions.value.length
-  }, 2800)
-}
-
 const checkHealth = async () => {
   try {
     const response = await healthApi.checkHealth()
@@ -104,10 +75,8 @@ const loadData = async () => {
     await checkHealth()
     // 健康检查通过后加载配置
     await infoStore.loadInfoConfig()
-    startSubtitleCarousel()
   } catch (e) {
     console.error('加载失败:', e)
-    stopSubtitleCarousel()
   } finally {
     isLoading.value = false
   }
@@ -131,9 +100,6 @@ onMounted(() => {
   loadData()
 })
 
-onUnmounted(() => {
-  stopSubtitleCarousel()
-})
 </script>
 
 <style lang="less" scoped>
@@ -174,7 +140,7 @@ onUnmounted(() => {
   flex: 1;
   display: grid;
   place-items: center;
-  padding: 72px 24px 100px;
+  padding: 60px 24px 160px;
   text-align: center;
   z-index: 1;
 }
@@ -182,17 +148,7 @@ onUnmounted(() => {
   width: 100%;
   max-width: 1080px;
 }
-.hero-eyebrow {
-  display: inline-block;
-  padding: 7px 17px;
-  border: 1px solid var(--gray-150);
-  border-radius: 24px;
-  background: var(--gray-50);
-  color: var(--gray-700);
-  font-size: 13px;
-  font-weight: 500;
-  margin-bottom: 30px;
-}
+
 h1 {
   font-size: 60px;
   line-height: 1.35;
@@ -200,16 +156,11 @@ h1 {
   margin: 0 0 28px;
 }
 h1 span {
-  color: var(--gray-600);
+  color: var(--gray-800);
   font-weight: inherit;
   margin-left: 12px;
 }
-.subtitle {
-  margin: 0 auto;
-  color: var(--gray-600);
-  font-size: 18px;
-  line-height: 1.8;
-}
+
 .start-button {
   margin-top: 42px;
   padding: 15px 34px;
@@ -242,7 +193,8 @@ h1 span {
   z-index: 1;
   padding: 28px 20px;
   text-align: center;
-  color: var(--gray-600);
+  color: var(--brand-on-primary);
+  text-shadow: 0 1px 5px var(--gray-900);
   font-size: 12px;
 }
 .loading-container,
@@ -269,10 +221,6 @@ h1 span {
   h1 span {
     display: block;
     margin: 5px 0 0;
-  }
-  .subtitle {
-    font-size: 16px;
-    max-width: 380px;
   }
   .hero-section {
     padding: 40px 24px 70px;
