@@ -10,7 +10,7 @@ from sqlalchemy import delete, func, or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from yuxi.storage.postgres.manager import pg_manager
-from yuxi.storage.postgres.models_business import APIKey, ScheduledAgentJob, User
+from yuxi.storage.postgres.models_business import APIKey, Department, OperationLog, ScheduledAgentJob, User
 
 
 def _utc_now() -> dt:
@@ -196,6 +196,24 @@ class UserRepository:
                 .limit(limit)
             )
             return list(page_result.all()), total_result.scalar() or 0
+
+    async def list_legacy_self_registered_users(self) -> list[User]:
+        """锁定有旧版自助注册审计且仍属于原独立部门的普通账号。"""
+        async with self._session() as session:
+            registration = select(OperationLog.id).where(
+                OperationLog.user_id == User.id,
+                OperationLog.operation == "用户注册",
+                OperationLog.details == "访客注册普通用户账户",
+            ).exists()
+            result = await session.execute(
+                select(User).join(Department, User.department_id == Department.id).where(
+                    User.role == "user", User.is_deleted == 0,
+                    Department.name == "个人空间-" + User.uid,
+                    Department.description == "自助注册账号的独立空间",
+                    registration,
+                ).with_for_update(of=User)
+            )
+            return list(result.scalars().all())
 
     async def create(self, data: dict[str, Any]) -> User:
         """创建用户"""

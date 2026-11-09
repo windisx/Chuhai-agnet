@@ -1,4 +1,4 @@
-"""访客注册普通用户的事务边界。"""
+"""访客注册个人空间管理员的事务边界。"""
 
 import asyncio
 from dataclasses import dataclass
@@ -24,7 +24,7 @@ class RegistrationError(Exception):
 
 
 async def register_public_user(db: AsyncSession, *, uid: str, password: str, client_ip: str) -> User:
-    """限速后原子创建独立个人部门与普通用户，冲突时回滚。"""
+    """限速后原子创建独立个人部门与管理员，冲突时回滚。"""
     redis = await get_async_redis_client()
     # 使用连接来源限速，不信任访客自带的X-Forwarded-For。
     count, ttl = await redis.eval(
@@ -51,17 +51,33 @@ async def register_public_user(db: AsyncSession, *, uid: str, password: str, cli
                 "uid": uid,
                 "username": uid,
                 "password_hash": password_hash,
-                "role": "user",
+                "role": "admin",
                 "department_id": department.id,
                 "phone_number": None,
             }
         )
-        await log_operation(db, user.id, "用户注册", "访客注册普通用户账户")
+        await log_operation(db, user.id, "用户注册", "访客注册个人空间管理员账户")
         await db.commit()
         return user
     except IntegrityError as exc:
         await db.rollback()
         raise RegistrationError("该账号已被使用，请更换账号", 409) from exc
+    except Exception:
+        await db.rollback()
+        raise
+
+
+async def promote_self_registered_users(db: AsyncSession) -> int:
+    """仅升级带旧版注册审计且匹配独立空间的普通账号。"""
+    repo = UserRepository(db)
+    try:
+        users = await repo.list_legacy_self_registered_users()
+        for user in users:
+            user.role = "admin"
+            await repo.save(user)
+            await log_operation(db, user.id, "注册账号权限升级", "按用户要求升级为个人空间管理员")
+        await db.commit()
+        return len(users)
     except Exception:
         await db.rollback()
         raise

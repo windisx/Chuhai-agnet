@@ -530,7 +530,7 @@ async def update_profile(
 
 @auth.post("/register", response_model=UserResponse, status_code=201)
 async def register_user(data: PublicRegistration, request: Request, db: AsyncSession = Depends(get_db)):
-    """访客注册普通用户并建立独立空间，不加入已有部门。"""
+    """访客注册个人空间管理员，不加入已有部门或授予超级管理员权限。"""
     try:
         user = await register_public_user(
             db,

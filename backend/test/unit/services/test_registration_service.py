@@ -8,7 +8,7 @@ from pydantic import ValidationError
 from sqlalchemy.exc import IntegrityError
 
 from server.routers.auth_router import PublicRegistration
-from yuxi.services.registration_service import RegistrationError, register_public_user
+from yuxi.services.registration_service import RegistrationError, promote_self_registered_users, register_public_user
 
 
 @pytest.mark.parametrize("extra", [{"role": "admin"}, {"department_id": 1}, {"phone_number": "13800000000"}])
@@ -40,7 +40,7 @@ async def test_registration_fixes_role_and_commits_audit_with_user():
     values = repo.create.call_args.args[0]
     assert values == {
         "uid": "visitor", "username": "visitor", "password_hash": "hashed",
-        "role": "user", "department_id": 123, "phone_number": None,
+        "role": "admin", "department_id": 123, "phone_number": None,
     }
     assert user is repo.create.return_value
     log.assert_awaited_once()
@@ -81,3 +81,19 @@ async def test_registration_refuses_rate_limit_and_uninitialized_system(count, f
             await register_public_user(db, uid="visitor", password="password123", client_ip="test")
     assert exc.value.status_code == status
     repo.create.assert_not_awaited()
+
+
+@pytest.mark.asyncio
+async def test_existing_registration_upgrade_only_processes_repository_candidates():
+    db, repo = AsyncMock(), AsyncMock()
+    user = SimpleNamespace(id=42, role="user")
+    repo.list_legacy_self_registered_users.return_value = [user]
+    with (
+        patch("yuxi.services.registration_service.UserRepository", return_value=repo),
+        patch("yuxi.services.registration_service.log_operation", new_callable=AsyncMock) as log,
+    ):
+        assert await promote_self_registered_users(db) == 1
+    assert user.role == "admin"
+    repo.save.assert_awaited_once_with(user)
+    log.assert_awaited_once()
+    db.commit.assert_awaited_once()
