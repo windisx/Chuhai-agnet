@@ -1,5 +1,5 @@
 <template>
-  <div class="ocean-backdrop" :class="{ paused }">
+  <div class="ocean-backdrop">
     <div class="ocean-light light-one" aria-hidden="true"></div>
     <div class="ocean-light light-two" aria-hidden="true"></div>
     <svg class="ocean-scene" viewBox="0 0 1600 1000" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
@@ -34,10 +34,6 @@
   </div>
 </template>
 
-<script setup>
-defineProps({ paused: { type: Boolean, default: false } })
-</script>
-
 <style scoped>
 .ocean-backdrop {
   position: absolute;
@@ -64,7 +60,6 @@ defineProps({ paused: { type: Boolean, default: false } })
 .wave-line { fill: none; stroke: currentColor; stroke-width: 0.8; opacity: 0.15; }
 .routes { stroke-width: 1; opacity: 0.65; }
 .route-travel { stroke-width: 2; stroke-linecap: round; stroke-dasharray: 3 1800; opacity: 0.5; animation: route-flow 32s linear infinite; }
-.paused .ocean-light, .paused .ocean-layer, .paused .route-travel { animation-play-state: paused; }
 @keyframes ocean-drift { from { transform: translate(-28px, 14px) rotate(-2deg); } to { transform: translate(28px, -18px) rotate(2deg); } }
 @keyframes light-drift { to { transform: translate(8%, 14%) scale(1.12); } }
 @keyframes route-flow { to { stroke-dashoffset: -1803; } }

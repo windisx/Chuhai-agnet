@@ -10,7 +10,7 @@
       </a-result>
     </div>
     <template v-else>
-      <HomeOceanBackdrop :paused="backgroundPaused" />
+      <HomeOceanBackdrop />
       <header class="site-header">
         <div class="logo">
           <img :src="BRAND.logo" :alt="BRAND.name" class="logo-img" />
@@ -30,9 +30,6 @@
       </main>
       <footer class="footer">
         <span>{{ BRAND.footer }}</span>
-        <button class="motion-toggle" :aria-pressed="backgroundPaused" @click="backgroundPaused = !backgroundPaused">
-          {{ backgroundPaused ? '播放背景动效' : '暂停背景动效' }}
-        </button>
       </footer>
     </template>
   </div>
@@ -57,7 +54,6 @@ const infoStore = useInfoStore()
 const isLoading = ref(true)
 const error = ref(null)
 const subtitleIndex = ref(0)
-const backgroundPaused = ref(false)
 let subtitleTimer = null
 
 const subtitleOptions = computed(() => [BRAND.subtitle])
@@ -249,20 +245,6 @@ h1 span {
   color: var(--gray-600);
   font-size: 12px;
 }
-.motion-toggle {
-  border: 1px solid var(--gray-200);
-  border-radius: 20px;
-  padding: 6px 12px;
-  background: var(--gray-10);
-  color: var(--gray-600);
-  font: inherit;
-  font-size: 11px;
-  cursor: pointer;
-}
-.motion-toggle:focus-visible {
-  outline: 3px solid var(--main-200);
-  outline-offset: 3px;
-}
 .loading-container,
 .error-container {
   min-height: 100vh;
@@ -297,9 +279,6 @@ h1 span {
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  .motion-toggle {
-    display: none;
-  }
   .start-button {
     transition: none;
   }
