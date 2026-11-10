@@ -20,17 +20,15 @@ onMounted(() => {
   const ocean = new Image()
   ocean.src = '/illustrations/home-ocean/sea.webp'
   const images = {}
-  for (const name of ['boat', 'cruise', 'cargo']) {
+  for (const name of ['boat', 'cargo']) {
     images[name] = new Image()
     images[name].src = `/illustrations/home-ocean/${name}.webp`
   }
 
   const ships = [
-    { type: 'boat', x: 0.08, y: 0.91, width: 0.10, speed: 0.0018, phase: 0, response: 1, direction: 1, trim: 0.99 },
-    { type: 'cargo', x: 0.37, y: 0.88, width: 0.17, speed: 0.0012, phase: 1.8, response: 0.3, direction: 1, trim: 0.9 },
-    { type: 'cruise', x: 0.78, y: 0.94, width: 0.21, speed: 0.0015, phase: 3.7, response: 0.45, direction: -1, trim: 0.97 },
-    { type: 'boat', x: 0.92, y: 0.84, width: 0.045, speed: 0.001, phase: 5, response: 0.8, direction: 1, trim: 0.99 }
-  ].sort((a, b) => a.y - b.y)
+    { type: 'boat', x: 0.59, y: 0.715, width: 0.017, speed: 0.00035, phase: 0, response: 0.65, direction: 1, trim: 0.99 },
+    { type: 'cargo', x: 0.78, y: 0.80, width: 0.18, speed: 0.00065, phase: 1.8, response: 0.3, direction: 1, trim: 0.9 }
+  ]
   const motion = window.matchMedia('(prefers-reduced-motion: reduce)')
   let width = 0
   let height = 0
@@ -83,18 +81,22 @@ onMounted(() => {
   /** 绘制当前时刻的海面和船队。 */
   function draw() {
     if (!ready || !width || !height || disposed) return
-    const scale = Math.max(width / ocean.width, height / ocean.height)
-    const sw = width / scale
-    const sh = height / scale
-    const sx = (ocean.width - sw) / 2
-    const sy = (ocean.height - sh) / 2
+    const sourceHorizon = Math.round(ocean.height * 0.43)
+    const horizon = height * 0.67
+    const waterHeight = height - horizon
     context.clearRect(0, 0, width, height)
-    context.drawImage(ocean, sx, sy, sw, sh, 0, 0, width, height)
-    for (let y = Math.floor(height * 0.43); y < height; y += 2) {
-      const depth = (y / height - 0.43) / 0.57
+    context.drawImage(ocean, 0, 0, ocean.width, sourceHorizon, 0, 0, width, horizon)
+    context.drawImage(ocean, 0, sourceHorizon, ocean.width, ocean.height - sourceHorizon,
+      0, horizon, width, waterHeight)
+    const sourceRatio = (ocean.height - sourceHorizon) / waterHeight
+    for (let y = Math.ceil(horizon); y < height; y += 2) {
+      const depth = (y - horizon) / waterHeight
       const shift = (Math.sin(y * 0.028 - elapsed * 0.35)
         + 0.25 * Math.sin(y * 0.057 - elapsed * 0.61)) * depth * 1.25
-      context.drawImage(ocean, sx, sy + y / scale, sw, 2 / scale, shift, y, width + 2, 2.2)
+      const sourceY = sourceHorizon + (y - horizon) * sourceRatio
+      const band = Math.min(2, height - y)
+      context.drawImage(ocean, 0, sourceY, ocean.width, band * sourceRatio,
+        shift, y, width + 2, band + 0.2)
     }
     for (const ship of ships) drawShip(ship, elapsed)
   }
@@ -163,20 +165,39 @@ onUnmounted(() => dispose())
 <style scoped>
 .ocean-backdrop {
   position: absolute;
+  z-index: 0;
   inset: 0;
   overflow: hidden;
   pointer-events: none;
-  background: url('/illustrations/home-ocean/sea.webp') center / cover no-repeat;
+  background: linear-gradient(130deg, var(--gray-0), var(--main-100));
   background-color: var(--main-100);
 }
+.ocean-backdrop::before {
+  content: '';
+  position: absolute;
+  inset: 67% 0 0;
+  background: url('/illustrations/home-ocean/sea.webp') center bottom / 100% 175.44% no-repeat var(--main-1000);
+}
 .ocean-scene, .ocean-veil { position: absolute; inset: 0; width: 100%; height: 100%; }
+.ocean-scene { z-index: 1; }
 .ocean-veil {
+  z-index: 2;
   background: linear-gradient(180deg,
     color-mix(in srgb, var(--gray-0) 22%, transparent),
     color-mix(in srgb, var(--gray-0) 32%, transparent) 30%,
-    color-mix(in srgb, var(--gray-0) 18%, transparent) 49%, transparent 75%);
+    color-mix(in srgb, var(--gray-0) 18%, transparent) 49%, transparent 72%,
+    color-mix(in srgb, var(--main-1000) 35%, transparent) 100%);
 }
-:global(.dark) .ocean-veil {
+.ocean-veil::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 33%;
+  background: linear-gradient(90deg,
+    color-mix(in srgb, var(--gray-0) 78%, transparent),
+    color-mix(in srgb, var(--gray-0) 36%, transparent) 36%, transparent 70%);
+  mask-image: linear-gradient(black 78%, transparent);
+}
+:global(.dark .ocean-backdrop .ocean-veil) {
   background: linear-gradient(180deg,
     color-mix(in srgb, var(--gray-0) 72%, transparent),
     color-mix(in srgb, var(--gray-0) 48%, transparent) 55%,

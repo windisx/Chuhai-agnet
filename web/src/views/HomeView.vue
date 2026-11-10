@@ -12,22 +12,22 @@
     <template v-else>
       <HomeOceanBackdrop />
       <header class="site-header">
-        <div class="logo">
-          <img :src="BRAND.logo" :alt="BRAND.name" class="logo-img" />
-          <span>{{ BRAND.name }}</span>
-        </div>
         <UserInfoComponent :show-button="true" />
       </header>
       <main class="hero-section">
         <div class="hero-content">
-          <h1>资料有据，<span>出海有序。</span></h1>
+          <h1 :aria-label="BRAND.name"><span>链证</span><span class="brand-blue">出海</span></h1>
+          <p class="hero-tagline">让出海资料预审更智能</p>
+          <p class="hero-description">出海资料预审智能体<br />让每个待办都有依据</p>
           <button class="start-button lucide-icon-btn" @click="goToChat">
             <span>开始体验</span><ArrowRight :size="20" />
           </button>
         </div>
       </main>
-      <footer class="footer">
-        <span>{{ BRAND.footer }}</span>
+      <footer class="features" aria-label="预审工作方式">
+        <section><h2>辅助预审</h2><p>核对差异与缺项</p></section>
+        <section><h2>证据支撑</h2><p>保留出处与未知</p></section>
+        <section><h2>人工确认</h2><p>补件后继续复核</p></section>
       </footer>
     </template>
   </div>
@@ -106,99 +106,90 @@ onMounted(() => {
 .home-container {
   position: relative;
   isolation: isolate;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  background: var(--gray-10);
+  min-height: max(800px, 100svh);
+  background: var(--main-50);
   color: var(--gray-1000);
   overflow: hidden;
 }
 .site-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 2;
   padding: 28px 40px;
-  gap: 24px;
-  z-index: 1;
 }
-.logo {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  font-size: 22px;
-  font-weight: 650;
-}
-.logo-img {
-  width: 38px;
-  height: 38px;
-}
-
-.logo span {
-  font-weight: 650;
+.site-header :deep(.ant-btn-primary) {
+  background: transparent;
+  color: var(--gray-1000);
+  border-color: var(--main-800);
+  border-radius: 16px;
+  box-shadow: none;
+  padding-inline: 24px;
+  height: 40px;
 }
 .hero-section {
-  flex: 1;
-  display: grid;
-  place-items: center;
-  padding: 60px 24px 160px;
-  text-align: center;
+  position: relative;
   z-index: 1;
+  padding: max(130px, 17vh) 6vw 270px;
 }
-.hero-content {
-  width: 100%;
-  max-width: 1080px;
-}
-
+.hero-content { max-width: 900px; }
 h1 {
-  font-size: 60px;
+  margin: 0 0 16px;
+  font-size: clamp(64px, 7.2vw, 116px);
+  line-height: 1.08;
+  letter-spacing: -4px;
+  font-weight: 750;
+}
+.brand-blue { color: var(--main-600); }
+h1 span { font-weight: inherit; }
+.hero-tagline {
+  margin: 0 0 22px;
+  font-size: clamp(25px, 2.8vw, 44px);
   line-height: 1.35;
   font-weight: 650;
-  margin: 0 0 28px;
+  letter-spacing: -1px;
 }
-h1 span {
-  color: var(--gray-800);
-  font-weight: inherit;
-  margin-left: 12px;
+.hero-description {
+  margin: 0;
+  font-size: clamp(18px, 1.7vw, 26px);
+  line-height: 1.65;
+  color: var(--gray-700);
 }
-
 .start-button {
-  margin-top: 42px;
-  padding: 15px 34px;
+  margin-top: 24px;
+  padding: 14px 32px;
   border: 1px solid var(--main-color);
   border-radius: 28px;
   background: var(--main-color);
   color: var(--brand-on-primary);
   gap: 12px;
-  font-size: 16px;
+  font-size: 18px;
   font-weight: 550;
   box-shadow: 0 8px 24px var(--shadow-2);
   cursor: pointer;
-  transition:
-    background 0.18s ease,
-    box-shadow 0.18s ease;
+  transition: background 0.18s ease, box-shadow 0.18s ease;
 }
-.start-button:hover {
-  background: var(--main-700);
-  box-shadow: 0 10px 28px var(--shadow-3);
-}
-.start-button:focus-visible {
-  outline: 3px solid var(--main-200);
-  outline-offset: 4px;
-}
-.footer {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 12px;
+.start-button:hover { background: var(--main-700); box-shadow: 0 10px 28px var(--shadow-3); }
+.start-button:focus-visible { outline: 3px solid var(--main-200); outline-offset: 4px; }
+.features {
+  position: absolute;
   z-index: 1;
-  padding: 28px 20px;
-  text-align: center;
+  left: 6vw;
+  bottom: 36px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 44px;
+  width: min(900px, 74%);
   color: var(--brand-on-primary);
-  text-shadow: 0 1px 5px var(--gray-900);
-  font-size: 12px;
+  text-shadow: 0 1px 8px var(--main-900);
 }
-.loading-container,
-.error-container {
+.features h2 { margin: 0 0 8px; font-size: clamp(20px, 2.4vw, 36px); font-weight: 650; }
+.features p { margin: 0; font-size: clamp(14px, 1.6vw, 23px); line-height: 1.5; }
+:global(.dark .home-container .features) {
+  color: var(--gray-1000);
+  text-shadow: 0 1px 8px var(--gray-0);
+}
+.loading-container, .error-container {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -209,26 +200,18 @@ h1 span {
   color: var(--gray-600);
 }
 @media (max-width: 768px) {
-  .site-header {
-    padding: 22px;
-  }
-  .logo {
-    font-size: 20px;
-  }
-  h1 {
-    font-size: 44px;
-  }
-  h1 span {
-    display: block;
-    margin: 5px 0 0;
-  }
-  .hero-section {
-    padding: 40px 24px 70px;
-  }
+  .home-container { min-height: max(820px, 100svh); }
+  .site-header { padding: 22px; }
+  .hero-section { padding: 130px 24px 300px; }
+  h1 { font-size: clamp(60px, 13vw, 88px); letter-spacing: -3px; }
+  .hero-tagline { font-size: clamp(23px, 4.8vw, 32px); letter-spacing: -0.5px; }
+  .hero-description { font-size: 18px; }
+  .start-button { font-size: 16px; }
+  .features { left: 24px; right: 24px; width: auto; bottom: 32px; gap: 14px; }
+  .features h2 { font-size: clamp(17px, 4.3vw, 24px); }
+  .features p { font-size: clamp(12px, 3vw, 16px); }
 }
 @media (prefers-reduced-motion: reduce) {
-  .start-button {
-    transition: none;
-  }
+  .start-button { transition: none; }
 }
 </style>
