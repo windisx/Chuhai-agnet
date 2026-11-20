@@ -15,6 +15,36 @@ The project supports human review. Its output does not replace compliance certif
 
 Results depend on the configured model, tools, knowledge base, and input documents. Install and configure the review Skill and system prompt using the linked instructions.
 
+## Interface gallery
+
+### Home
+
+![ChuHai-agent home page](assets/readme/home.png)
+
+### Sign in
+
+![ChuHai-agent sign-in page](assets/readme/login.png)
+
+### Agent workspace
+
+Select an agent, model, and project, and reference files, knowledge bases, or Skills in a conversation.
+
+![ChuHai-agent workspace](assets/readme/agent-workspace.png)
+
+### Review dashboard
+
+View review items, priorities, missing materials, and suggested next steps in one place.
+
+![Export-document review dashboard](assets/readme/review-dashboard.png)
+
+### Evidence and follow-up
+
+Open a review item to see supporting documents, requested materials, and follow-up actions.
+
+![Evidence and follow-up details](assets/readme/evidence-detail.png)
+
+The review screenshots illustrate the interface and workflow; findings must be checked against the actual materials by a human.
+
 ## Get the code
 
 This is a private repository; authenticate with a GitHub account that has access. The default `main` branch contains the current stable version:
